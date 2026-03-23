@@ -1,0 +1,12 @@
+# R session / output files
+.RData
+.Rhistory
+*.RData
+
+# Output plots directory
+realdata/
+
+# OS / IDE
+.DS_Store
+.Rproj.user/
+*.Rproj
