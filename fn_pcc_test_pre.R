@@ -14,7 +14,9 @@ src <-
 #include <Rcpp.h>
 #include <iostream>
 #include <RcppNumerical.h>
+#ifdef _OPENMP
 #include <omp.h>
+#endif
 using namespace Numer;
 using namespace Rcpp;
 using Eigen::Map;                       // 'maps' rather than copies
@@ -148,7 +150,9 @@ NumericMatrix cpp_Kmatrix4(int KK, NumericMatrix X, NumericMatrix ggrids, Numeri
     NumericMatrix xx(N, n);
     double mia = M_PI / 180.0;
 
+    #ifdef _OPENMP
     #pragma omp parallel for
+    #endif
     for (int i = 0; i < N; i++) {
         double L1 = ggrids(i,0);
         double l1 = ggrids(i,1);
@@ -409,7 +413,9 @@ NumericMatrix cpp_Kmatrix7(int KK, NumericMatrix X, NumericMatrix ggrids, Numeri
     NumericMatrix xx(N, n);
     double mia = M_PI / 180.0;
 
+    #ifdef _OPENMP
     #pragma omp parallel for
+    #endif
     for (int i = 0; i < N; i++) {
         double L1 = ggrids(i,0);
         double l1 = ggrids(i,1);
