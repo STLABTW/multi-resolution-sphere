@@ -1,4 +1,4 @@
-# Multi-Resolution Model on the Sphere
+# Multi-Resolution Spatial Methods on the Sphere: Efficient Prediction for Global Data
 
 Spherical multi-resolution regression applied to global sea-surface temperature (SST) data.
 
