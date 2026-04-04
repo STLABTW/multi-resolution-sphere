@@ -1,5 +1,10 @@
 # Multi-Resolution Spatial Methods on the Sphere: Efficient Prediction for Global Data
 
+This repository contains the code for the paper:
+
+> **Multi-resolution approximations of Gaussian processes for large spatial datasets on the sphere**
+> *Environmetrics*, 2025. DOI: [10.1002/env.70092](https://doi.org/10.1002/env.70092)
+
 Spherical multi-resolution regression applied to global sea-surface temperature (SST) data.
 
 ## Overview
