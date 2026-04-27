@@ -2,9 +2,18 @@
 .RData
 .Rhistory
 *.RData
+.Ruserdata
 
 # Output plots directory
 realdata/
+
+# Package build artifacts
+mrtsSphere*.tar.gz
+mrtsSphere.Rcheck/
+src/*.o
+src/*.so
+src/*.dll
+src/symbols.rds
 
 # OS / IDE
 .DS_Store

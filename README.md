@@ -1,59 +1,74 @@
-# Multi-Resolution Spatial Methods on the Sphere: Efficient Prediction for Global Data
+# mrtsSphere
 
-This repository contains the code for the paper:
+[![License: GPL v2+](https://img.shields.io/badge/License-GPL%20v2%2B-blue.svg)](https://www.gnu.org/licenses/gpl-2.0)
 
-> **Multi-resolution approximations of Gaussian processes for large spatial datasets on the sphere**
-> *Environmetrics*, 2025. DOI: [10.1002/env.70092](https://doi.org/10.1002/env.70092)
+Multi-resolution thin-plate spline (MRTS) basis functions on the sphere
+for large-scale spatial regression and prediction. R implementation of
+the method in:
 
-Spherical multi-resolution regression applied to global sea-surface temperature (SST) data.
+> **Multi-resolution approximations of Gaussian processes for large
+> spatial datasets on the sphere.** *Environmetrics*, 2025.
+> DOI: [10.1002/env.70092](https://doi.org/10.1002/env.70092)
 
-## Overview
+The basis is constructed from the eigen-decomposition of a centered
+spherical kernel and is evaluated on the prediction grid via a
+parallel C++ routine (Rcpp + optional OpenMP).
 
-`fullmodel-max.R` fits the model to the SST annual-maximum dataset and produces:
-- predicted SST map (Mollweide projection)
-- prediction standard-error map
-- raw-data map
-
-The method uses multi-resolution thin-plate splines (MRTS) on the sphere combined with a locally-supported Matérn covariance (Wendland tapering).
-
-## Files
-
-| File | Description |
-|------|-------------|
-| `fullmodel-max.R` | Main analysis script for the annual-maximum dataset |
-| `fn_pcc_test_pre.R` | C++ kernel functions (compiled via Rcpp) and MRTS helpers |
-| `fn_0610.R` | Variogram objective functions for parameter estimation |
-| `effectivefn.R` | Matérn effective-range calculator |
-| `integral_table2.rds` | Pre-computed lookup table for the kernel integrals |
-| `data_sst_max_20240419.csv` | SST annual-maximum dataset (tracked via Git LFS) |
-
-## Data
-
-`data_sst_max_20240419.csv` contains ~6.4 million ocean-grid observations with columns:
-`latitude`, `longitude`, `temperature` (°C).
-
-The file is stored in this repository via **Git LFS**. Clone with LFS support:
-```bash
-git lfs install
-git clone <repo-url>
-```
-
-## Dependencies (R packages)
+## Installation
 
 ```r
-install.packages(c(
-  "icosa", "fields", "sf", "rnaturalearth", "rnaturalearthdata",
-  "pracma", "raster", "maps", "SparseM", "ggplot2",
-  "RSpectra", "Rcpp", "RcppArmadillo", "RcppEigen",
-  "RcppNumerical", "GpGp", "MASS", "Matrix"
-))
+# install.packages("remotes")
+remotes::install_github("STLABTW/multi-resolution-sphere")
 ```
 
-## Usage
+The package compiles C++ code on installation; you need a working
+toolchain (Xcode CLT on macOS, Rtools on Windows, `r-base-dev` on
+Linux). OpenMP is optional — without it the package still works,
+single-threaded.
 
-Set the working directory to the repo root and run:
+## Quick start
+
 ```r
-source("fullmodel-max.R")
+library(mrtsSphere)
+
+# Build a 20 x 10 grid of (lat, lon) locations on the sphere.
+n_lon  <- 20
+n_lat  <- 10
+lon_seq <- seq(-180, 176, length.out = n_lon)
+lat_seq <- seq( -90,  87, length.out = n_lat)
+grid <- as.matrix(expand.grid(lat = lat_seq, lon = lon_seq))
+
+# Pick 100 knots at random.
+set.seed(1)
+knots <- grid[sample(nrow(grid), 100), ]
+
+# 10 multi-resolution basis functions evaluated on the full grid.
+res <- mrts_sphere(knots, k = 10, X = grid)
+dim(res$mrts)   # 200 x 10
 ```
 
-Output PNG files are saved to `realdata/`.
+See `vignette("mrtsSphere")` for a worked example that simulates a
+spherical Gaussian random field with `fields` and recovers it using the
+MRTS basis.
+
+## Reproducing the paper
+
+The original analysis scripts from the paper are bundled under
+`inst/paper/`. After installing the package:
+
+```r
+file.path(system.file("paper", package = "mrtsSphere"), "fullmodel-max.R")
+```
+
+The SST input dataset (`data_sst_max_20240419.csv`) is tracked via
+Git LFS in [this repository](https://github.com/STLABTW/multi-resolution-sphere).
+
+## Citation
+
+```r
+citation("mrtsSphere")
+```
+
+## License
+
+GPL (>= 2). See `LICENSE` for details.
