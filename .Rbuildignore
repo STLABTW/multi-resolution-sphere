@@ -3,7 +3,6 @@
 ^\.git$
 ^\.gitignore$
 ^\.gitattributes$
-^README\.md$
 ^README\.Rmd$
 ^data-raw$
 ^results$

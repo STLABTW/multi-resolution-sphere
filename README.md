@@ -47,9 +47,15 @@ res <- mrts_sphere(knots, k = 10, X = grid)
 dim(res$mrts)   # 200 x 10
 ```
 
-See `vignette("mrtsSphere")` for a worked example that simulates a
-spherical Gaussian random field with `fields` and recovers it using the
-MRTS basis.
+A longer worked example that simulates a spherical Gaussian random
+field with `fields` and recovers it through the basis ships with the
+package at:
+
+```r
+system.file("articles", "mrtsSphere.Rmd", package = "mrtsSphere")
+```
+
+(Render with `rmarkdown::render()` if you have pandoc installed.)
 
 ## Reproducing the paper
 

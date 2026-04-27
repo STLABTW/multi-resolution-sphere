@@ -27,7 +27,13 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: STLAB Authors \email{hhuscout@gmail.com}
+\strong{Maintainer}: Hao-Yun Huang \email{hhuscout@gmail.com} (\href{https://orcid.org/0009-0004-8384-3261}{ORCID})
+
+Authors:
+\itemize{
+  \item Hsin-Cheng Huang (\href{https://orcid.org/0000-0002-5613-349X}{ORCID})
+  \item Ching-Kang Ing (\href{https://orcid.org/0000-0003-1362-8246}{ORCID})
+}
 
 }
 \keyword{internal}

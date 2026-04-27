@@ -1,0 +1,140 @@
+---
+title: "Recovering a spherical Gaussian field with the MRTS basis"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Recovering a spherical Gaussian field with the MRTS basis}
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 3.5,
+  dpi = 90
+)
+set.seed(1)
+```
+
+## What this vignette shows
+
+Given noisy point observations on the sphere, we use the multi-resolution
+thin-plate spline (MRTS) basis from `mrts_sphere()` to reconstruct the
+underlying field. The simulated field is a spherical Gaussian process
+with exponential covariance in great-circle distance — built using
+`fields::rdist.earth()` rather than any internal helper, so the example
+is fully transparent.
+
+```{r}
+library(mrtsSphere)
+```
+
+## A global lat/lon grid
+
+```{r}
+n_lon <- 24
+n_lat <- 12
+lon_seq <- seq(-180, 165, length.out = n_lon)
+lat_seq <- seq( -85,  85, length.out = n_lat)
+grid <- as.matrix(expand.grid(lat = lat_seq, lon = lon_seq))
+nrow(grid)
+```
+
+## Simulating a spherical Gaussian field
+
+We compute a great-circle distance matrix and use it to build an
+exponential covariance matrix. Then a single draw from `N(0, Sigma)`
+gives the "true" field on the grid.
+
+```{r}
+# fields::rdist.earth expects (lon, lat); our grid is (lat, lon).
+d_grid <- fields::rdist.earth(grid[, 2:1], miles = FALSE)
+range_km   <- 2000
+sigma2     <- 1
+cov_field  <- sigma2 * exp(-d_grid / range_km)
+
+# Draw via Cholesky (stable jitter for numerical PSD).
+L      <- t(chol(cov_field + diag(1e-8, nrow(grid))))
+y_true <- as.numeric(L %*% rnorm(nrow(grid)))
+```
+
+## Sampling noisy observations
+
+```{r}
+n_obs    <- 80
+obs_idx  <- sample(nrow(grid), n_obs)
+obs_loc  <- grid[obs_idx, ]
+y_obs    <- y_true[obs_idx] + rnorm(n_obs, sd = 0.3)
+```
+
+## Building the MRTS basis
+
+`mrts_sphere(knot, k, X)` evaluates `k` MRTS basis functions, defined
+on the sphere from the knot set, at the rows of `X`. We use the
+observation locations as knots and evaluate everywhere on the prediction
+grid.
+
+```{r}
+k <- 12
+basis <- mrts_sphere(knot = obs_loc, k = k, X = grid)$mrts
+dim(basis)
+```
+
+## Fitting and predicting
+
+Project the noisy observations onto the basis (least squares), then
+predict on the full grid.
+
+```{r}
+B_obs    <- basis[obs_idx, , drop = FALSE]
+beta_hat <- qr.solve(B_obs, y_obs)
+y_hat    <- as.numeric(basis %*% beta_hat)
+
+rmse <- sqrt(mean((y_hat - y_true)^2))
+round(rmse, 3)
+```
+
+## Visualising
+
+```{r, fig.alt = "Three lat/lon maps showing the truth, observations, and MRTS prediction."}
+op <- par(mfrow = c(1, 3), mar = c(2, 2, 2, 1))
+
+zlim <- range(y_true, y_hat)
+
+image(matrix(y_true, n_lat, n_lon),
+      x = lat_seq, y = lon_seq,
+      xlab = "lat", ylab = "lon",
+      main = "truth", zlim = zlim)
+
+plot(obs_loc[, "lon"], obs_loc[, "lat"],
+     xlim = range(lon_seq), ylim = range(lat_seq),
+     xlab = "lon", ylab = "lat",
+     main = sprintf("observations (n = %d)", n_obs),
+     pch = 16, cex = 0.8)
+
+image(matrix(y_hat, n_lat, n_lon),
+      x = lat_seq, y = lon_seq,
+      xlab = "lat", ylab = "lon",
+      main = sprintf("MRTS prediction (k = %d)", k), zlim = zlim)
+
+par(op)
+```
+
+## What just happened
+
+The first MRTS basis function is the constant `sqrt(1/n_knot)` and
+captures the field's mean. Subsequent basis functions come from the
+eigen-decomposition of the centered spherical kernel evaluated at the
+knot set, ordered by descending eigenvalue, so they capture progressively
+finer-scale spherical structure. With only `r 12` basis functions and
+`r 80` noisy observations we recover most of the smooth field; pushing
+`k` higher would let the basis express finer structure at the cost of
+more variance.
+
+## Reference
+
+Huang, H.-Y., Huang, H.-C., and Ing, C.-K. (2025). Multi-Resolution
+Spatial Methods on the Sphere: Efficient Prediction for Global Data.
+*Environmetrics*. <https://doi.org/10.1002/env.70092>
