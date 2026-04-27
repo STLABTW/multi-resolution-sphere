@@ -11,9 +11,33 @@ basis on the sphere from Huang, Huang, and Ing (2025), *Environmetrics*,
 ## Test environments
 
 - macOS (Apple silicon), R 4.5.0 — `R CMD check --as-cran`
-  - 0 errors | 0 warnings | 0 notes (run after first GitHub push)
-- (To run before submission: `devtools::check_win_devel()` and
-  `rhub::rhub_check()` for Linux/Windows/macOS-cran flavours.)
+  - 0 errors | 0 warnings | 0 notes
+- win-builder R-release (R 4.6.0)
+  - 0 errors | 0 warnings | 1 note (see below)
+- win-builder R-devel (R-devel, 2026-04-26 r89963)
+  - 0 errors | 0 warnings | 1 note (see below)
+
+## Notes from win-builder
+
+Both Windows builds report:
+
+```
+* checking CRAN incoming feasibility ... NOTE
+Maintainer: 'Hao-Yun Huang <hhuscout@gmail.com>'
+
+New submission
+
+Possibly misspelled words in DESCRIPTION:
+  Environmetrics (17:52)
+  Ing (16:23)
+```
+
+- "New submission" — this is the package's first CRAN upload.
+- "Environmetrics" — the name of the journal in which the underlying
+  paper was published (Wiley journal *Environmetrics*).
+- "Ing" — surname of co-author Ching-Kang Ing.
+
+Both flagged words are intentional and correctly spelled.
 
 ## Notes for reviewers
 
