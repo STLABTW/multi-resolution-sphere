@@ -132,8 +132,15 @@ for (i in 1:NN) {
 }
 
 # --- Plotting -----------------------------------------------------------------
-dir_name  <- "realdata"
-dir.create(dir_name, showWarnings = FALSE)
+# Output directory: defaults to a session-local tempdir() so the script
+# never writes to the user's filespace by default. Set the environment
+# variable MRTS_PAPER_OUTDIR (or assign `dir_name` before sourcing) to
+# write the figures somewhere persistent.
+if (!exists("dir_name")) {
+  dir_name <- Sys.getenv("MRTS_PAPER_OUTDIR", unset = "")
+  if (!nzchar(dir_name)) dir_name <- file.path(tempdir(), "realdata")
+}
+dir.create(dir_name, showWarnings = FALSE, recursive = TRUE)
 data_name <- tools::file_path_sans_ext(basename(filename))
 
 world      <- ne_countries(scale = "medium", returnclass = "sf")

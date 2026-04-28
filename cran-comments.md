@@ -1,6 +1,21 @@
 # cran-comments.md
 
-## Submission
+## Submission (resubmission, 0.1.2)
+
+Resubmission addressing the reviewer comment on 0.1.1:
+
+> Please ensure that your functions do not write by default or in your
+> examples/vignettes/tests in the user's home filespace (including the
+> package directory and getwd()).
+>
+> -> inst/paper/fullmodel-max.R
+
+Fix in 0.1.2: `inst/paper/fullmodel-max.R` no longer writes to a
+hard-coded relative path. The output directory is now obtained from
+either an existing `dir_name` variable in the calling environment, the
+`MRTS_PAPER_OUTDIR` environment variable, or — by default — a
+session-local `tempdir()`. No CRAN-checked code path (R/, examples,
+tests) writes outside `tempdir()`.
 
 This is the first CRAN submission of `mrtsSphere`.
 

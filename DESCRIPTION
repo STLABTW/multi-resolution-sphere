@@ -1,7 +1,7 @@
 Package: mrtsSphere
 Type: Package
 Title: Multi-Resolution Thin-Plate Splines on the Sphere
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: c(
     person(given = "Hao-Yun", family = "Huang", role = c("aut", "cre"),
            email = "hhuscout@gmail.com",
