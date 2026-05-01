@@ -1,13 +1,16 @@
 # mrtsSphere
 
+[![CRAN status](https://www.r-pkg.org/badges/version/mrtsSphere)](https://cran.r-project.org/package=mrtsSphere)
+[![CRAN downloads](https://cranlogs.r-pkg.org/badges/grand-total/mrtsSphere)](https://cran.r-project.org/package=mrtsSphere)
 [![License: GPL v2+](https://img.shields.io/badge/License-GPL%20v2%2B-blue.svg)](https://www.gnu.org/licenses/gpl-2.0)
 
 Multi-resolution thin-plate spline (MRTS) basis functions on the sphere
 for large-scale spatial regression and prediction. R implementation of
 the method in:
 
-> **Multi-resolution approximations of Gaussian processes for large
-> spatial datasets on the sphere.** *Environmetrics*, 2025.
+> Huang, H.-Y., Huang, H.-C., and Ing, C.-K. (2025).
+> **Multi-Resolution Spatial Methods on the Sphere: Efficient Prediction
+> for Global Data.** *Environmetrics*.
 > DOI: [10.1002/env.70092](https://doi.org/10.1002/env.70092)
 
 The basis is constructed from the eigen-decomposition of a centered
@@ -15,6 +18,14 @@ spherical kernel and is evaluated on the prediction grid via a
 parallel C++ routine (Rcpp + optional OpenMP).
 
 ## Installation
+
+From CRAN (recommended):
+
+```r
+install.packages("mrtsSphere")
+```
+
+Development version from GitHub:
 
 ```r
 # install.packages("remotes")
@@ -77,4 +88,5 @@ citation("mrtsSphere")
 
 ## License
 
-GPL (>= 2). See `LICENSE` for details.
+GPL (>= 2). See <https://www.gnu.org/licenses/gpl-2.0> for the full
+license text.
