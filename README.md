@@ -58,9 +58,32 @@ res <- mrts_sphere(knots, k = 10, X = grid)
 dim(res$mrts)   # 200 x 10
 ```
 
+For a full multi-resolution mixed model (MRMM) fit — basis +
+GLS-on-tapered-Matérn-residuals + kriging predictions with prediction
+SE — use `mrmm_fit()`:
+
+```r
+# z is the vector of observations at the rows of `obs_loc` (lat, lon).
+fit <- mrmm_fit(z = z, loc = obs_loc, knots = obs_loc, k = 50,
+                taper_range  = 0.2,   # radians on unit sphere
+                matern_range = 0.07,
+                sill         = 1.6,
+                nugget       = 0.02,
+                smoothness   = 0.5)
+
+pred <- predict(fit, newdata = grid, se.fit = TRUE)
+pred$fit      # mean prediction at each grid row
+pred$se.fit   # prediction standard error
+```
+
+The covariance parameters above are user-supplied. A future release
+will add `mrmm_estimate_params()`; for now you can estimate them using
+`geoR`, `gstat`, or the variogram-based scripts under
+`inst/paper/`.
+
 A longer worked example that simulates a spherical Gaussian random
-field with `fields` and recovers it through the basis ships with the
-package at:
+field with `fields` and recovers it through both OLS and MRMM ships
+with the package at:
 
 ```r
 system.file("articles", "mrtsSphere.Rmd", package = "mrtsSphere")

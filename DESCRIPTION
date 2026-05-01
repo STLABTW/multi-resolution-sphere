@@ -1,7 +1,7 @@
 Package: mrtsSphere
 Type: Package
 Title: Multi-Resolution Thin-Plate Splines on the Sphere
-Version: 0.1.2
+Version: 0.2.0
 Authors@R: c(
     person(given = "Hao-Yun", family = "Huang", role = c("aut", "cre"),
            email = "hhuscout@gmail.com",
@@ -10,13 +10,15 @@ Authors@R: c(
            comment = c(ORCID = "0000-0002-5613-349X")),
     person(given = "Ching-Kang", family = "Ing", role = "aut",
            comment = c(ORCID = "0000-0003-1362-8246")))
-Description: Constructs multi-resolution thin-plate spline basis
-    functions on the sphere for use in spatial regression and large-scale
-    spatial prediction problems. Implements the basis system described in
+Description: Constructs multi-resolution thin-plate spline (MRTS) basis
+    functions on the sphere and fits the corresponding multi-resolution
+    mixed model (MRMM) by generalised least squares with a tapered
+    Matérn residual covariance, including kriging-style prediction with
+    closed-form standard errors. Implements the system described in
     Huang, Huang, and Ing (2025) "Multi-Resolution Spatial Methods on the
     Sphere: Efficient Prediction for Global Data", Environmetrics,
-    <doi:10.1002/env.70092>. Heavy computations are written in 'C++' via
-    'Rcpp' with optional 'OpenMP' parallelism.
+    <doi:10.1002/env.70092>. Heavy basis computations are written in
+    'C++' via 'Rcpp' with optional 'OpenMP' parallelism.
 License: GPL (>= 2)
 Encoding: UTF-8
 Depends:

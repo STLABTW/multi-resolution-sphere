@@ -1,23 +1,22 @@
 # cran-comments.md
 
-## Submission (resubmission, 0.1.2)
+## Submission (0.2.0, feature release)
 
-Resubmission addressing the reviewer comment on 0.1.1:
+This is a feature release of the CRAN-resident package `mrtsSphere`.
 
-> Please ensure that your functions do not write by default or in your
-> examples/vignettes/tests in the user's home filespace (including the
-> package directory and getwd()).
->
-> -> inst/paper/fullmodel-max.R
+New in 0.2.0:
 
-Fix in 0.1.2: `inst/paper/fullmodel-max.R` no longer writes to a
-hard-coded relative path. The output directory is now obtained from
-either an existing `dir_name` variable in the calling environment, the
-`MRTS_PAPER_OUTDIR` environment variable, or — by default — a
-session-local `tempdir()`. No CRAN-checked code path (R/, examples,
-tests) writes outside `tempdir()`.
+- `mrmm_fit()` fits the multi-resolution mixed model (MRMM) by GLS
+  with a tapered Matérn residual covariance, given user-supplied
+  covariance parameters.
+- `predict.mrmm()` returns kriging-style predictions and prediction
+  standard errors.
+- `tapered_matern_sphere()` is exported for users who want direct
+  access to the covariance.
 
-This is the first CRAN submission of `mrtsSphere`.
+A future release will add a parameter-estimation routine
+(`mrmm_estimate_params()`); the present release deliberately keeps the
+covariance parameters as user inputs to limit scope.
 
 The package implements the multi-resolution thin-plate spline (MRTS)
 basis on the sphere from Huang, Huang, and Ing (2025), *Environmetrics*,
